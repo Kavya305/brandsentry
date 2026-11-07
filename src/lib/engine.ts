@@ -492,6 +492,7 @@ export function runCheck(text: string, lib: BrandLibrary, image?: ImageAttachmen
     findings: [...findings, ...checkImage(image, lib)],
     verified: claims.verified,
     checkedAt: new Date().toISOString(),
+    text,
   };
 }
 

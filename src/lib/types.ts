@@ -113,6 +113,8 @@ export interface CheckResult {
   findings: Finding[];
   verified: VerifiedClaim[];
   checkedAt: string;
+  /** The exact text that was checked, so the UI knows when results are stale. */
+  text: string;
 }
 
 export interface ImageAnalysis {
