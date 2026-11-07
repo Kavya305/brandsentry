@@ -55,7 +55,7 @@ function sample(
     result: current,
     disputes,
     fixesAccepted: fixed.map((f) => ({ ruleId: f.ruleId, category: f.category, at: ago(opts.hoursAgo - 0.5) })),
-    issueLog: first.findings.map((f) => ({ ruleId: f.ruleId, category: f.category, at: t0 })),
+    issueLog: first.findings.map((f) => ({ key: f.key, ruleId: f.ruleId, category: f.category, at: t0 })),
     status: opts.status,
     versions: [
       { n: 1, content: opts.first, at: t0, issues: first.findings.length, note: "First draft" },
@@ -154,12 +154,12 @@ function useAppStore() {
 
   const recheck = (s: Submission, lib: BrandLibrary) => {
     s.result = runCheck(s.content, lib, s.image);
-    const logged = new Set(s.issueLog.map((i) => `${i.ruleId}`));
+    const logged = new Set(s.issueLog.map((i) => i.key ?? i.ruleId));
     for (const f of s.result.findings) {
-      // Log each rule once per piece so repeat mistakes are counted fairly.
-      if (!logged.has(f.ruleId)) {
-        s.issueLog.push({ ruleId: f.ruleId, category: f.category, at: now() });
-        logged.add(f.ruleId);
+      // Log each distinct issue once per piece, however often it is re-checked.
+      if (!logged.has(f.key)) {
+        s.issueLog.push({ key: f.key, ruleId: f.ruleId, category: f.category, at: now() });
+        logged.add(f.key);
       }
     }
     // Drop disputes for findings that no longer exist.

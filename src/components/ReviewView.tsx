@@ -73,7 +73,8 @@ function Detail({ s, onGoCreator }: { s: Submission; onGoCreator: (id: string) =
   const [note, setNote] = useState("");
   const [override, setOverride] = useState(false);
   const [active, setActive] = useState<string>();
-  const findings = s.result?.findings ?? [];
+  const rank = { high: 0, medium: 1, low: 2 } as const;
+  const findings = [...(s.result?.findings ?? [])].sort((a, b) => rank[a.severity] - rank[b.severity] || a.start - b.start);
   const disputed = findings.filter((f) => s.disputes[f.key]);
   const open = findings.filter((f) => !s.disputes[f.key]);
   const highOpen = blockers(s);

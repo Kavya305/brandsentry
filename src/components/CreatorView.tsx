@@ -74,7 +74,8 @@ function Editor({ s, onGoReview }: { s: Submission; onGoReview: (id: string) => 
   const editable = s.status === "draft" || s.status === "changes_requested";
   const r = s.result;
   const stale = !!r && r.text !== s.content;
-  const findings = r?.findings ?? [];
+  const rank = { high: 0, medium: 1, low: 2 } as const;
+  const findings = [...(r?.findings ?? [])].sort((a, b) => rank[a.severity] - rank[b.severity] || a.start - b.start);
   const block = blockers(s);
   const fixable = findings.filter((f) => f.replacement !== undefined && f.where === "text" && !s.disputes[f.key]).length;
   const counts = { high: 0, medium: 0, low: 0 };

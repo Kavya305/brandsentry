@@ -172,7 +172,7 @@ export interface Submission {
   /** Fixes the creator accepted, kept for insights. */
   fixesAccepted: { ruleId: string; category: Category; at: string }[];
   /** Every finding ever raised, kept for insights. */
-  issueLog: { ruleId: string; category: Category; at: string }[];
+  issueLog: { key?: string; ruleId: string; category: Category; at: string }[];
   status: Status;
   versions: Version[];
   comments: Comment[];
